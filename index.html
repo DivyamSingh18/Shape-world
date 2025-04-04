@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bouncing Colorful Shapes</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.9;
+      transform-origin: center;
+      transition: background-color 0.5s, border-bottom-color 0.5s;
+    }
+
+    .circle {
+      width: 40px;
+      height: 40px;
+      background: #00bcd4;
+      border-radius: 50%;
+    }
+
+    .square {
+      width: 40px;
+      height: 40px;
+      background: #e91e63;
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 40px solid #8bc34a;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  const shapeTypes = ['circle', 'square', 'triangle'];
+  const shapes = [];
+
+  function getRandomColor() {
+    const colors = ['#00bcd4', '#e91e63', '#8bc34a', '#ff9800', '#9c27b0', '#03a9f4', '#ffc107', '#ff5722'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  for (let i = 0; i < 40; i++) {
+    const div = document.createElement('div');
+    const shapeType = shapeTypes[i % shapeTypes.length];
+    div.className = `shape ${shapeType}`;
+    document.body.appendChild(div);
+
+    const shape = {
+      el: div,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: -1 + Math.random() * 2,
+      vy: -1 + Math.random() * 2,
+      rotation: Math.random() * 360,
+      rotationSpeed: -2 + Math.random() * 4,
+      type: shapeType
+    };
+
+    shapes.push(shape);
+  }
+
+  function animate() {
+    for (const shape of shapes) {
+      shape.x += shape.vx;
+      shape.y += shape.vy;
+      shape.rotation += shape.rotationSpeed;
+
+      const el = shape.el;
+
+      // Bounce off edges and change color
+      if (shape.x <= 0 || shape.x >= window.innerWidth - 40) {
+        shape.vx *= -1;
+        changeColor(el, shape.type);
+      }
+      if (shape.y <= 0 || shape.y >= window.innerHeight - 40) {
+        shape.vy *= -1;
+        changeColor(el, shape.type);
+      }
+
+      // Apply position and rotation
+      el.style.left = `${shape.x}px`;
+      el.style.top = `${shape.y}px`;
+      el.style.transform = `rotate(${shape.rotation}deg)`;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  function changeColor(el, type) {
+    const newColor = getRandomColor();
+    if (type === 'triangle') {
+      el.style.borderBottomColor = newColor;
+    } else {
+      el.style.backgroundColor = newColor;
+    }
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
