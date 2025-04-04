@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bouncing Colorful Shapes</title>
+  <title>Bouncing Colorful Shapes - Smooth</title>
   <style>
     body {
       margin: 0;
@@ -15,6 +15,7 @@
       position: absolute;
       opacity: 0.9;
       transform-origin: center;
+      will-change: transform;
       transition: background-color 0.5s, border-bottom-color 0.5s;
     }
 
@@ -61,10 +62,10 @@
       el: div,
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      vx: -1 + Math.random() * 2,
-      vy: -1 + Math.random() * 2,
+      vx: (-0.5 + Math.random()) * 0.8, // much slower
+      vy: (-0.5 + Math.random()) * 0.8,
       rotation: Math.random() * 360,
-      rotationSpeed: -2 + Math.random() * 4,
+      rotationSpeed: (-1 + Math.random() * 2) * 0.5, // slower rotation
       type: shapeType
     };
 
@@ -79,7 +80,6 @@
 
       const el = shape.el;
 
-      // Bounce off edges and change color
       if (shape.x <= 0 || shape.x >= window.innerWidth - 40) {
         shape.vx *= -1;
         changeColor(el, shape.type);
@@ -89,10 +89,7 @@
         changeColor(el, shape.type);
       }
 
-      // Apply position and rotation
-      el.style.left = `${shape.x}px`;
-      el.style.top = `${shape.y}px`;
-      el.style.transform = `rotate(${shape.rotation}deg)`;
+      el.style.transform = `translate(${shape.x}px, ${shape.y}px) rotate(${shape.rotation}deg)`;
     }
 
     requestAnimationFrame(animate);
